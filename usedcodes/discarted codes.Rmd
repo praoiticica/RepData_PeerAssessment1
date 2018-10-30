@@ -1,0 +1,41 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+used and discarted codes
+
+ggplot(stepsday3,aes(steps,fill=ExperimentCohort))+
+  geom_bar(stat="identity",position='dodge')
+
+ggplot(data=stepsday1, aes(steps)) + 
+  geom_histogram(alpha=0.3)
+
+ggplot(data=stepsday2, aes(steps)) + 
+  geom_histogram(alpha=0.3)
+
+ggplot(data=stepsday3, aes(steps, fill=dataset)) + 
+  geom_histogram(alpha=0.3)
+
+ggplot(stepsday3, aes(steps, fill = dataset)) + geom_histogram(alpha =0.7, aes(x = ..steps per day.., y= ..frequency..), position = 'identity')+ scale_fill_manual(values = wes_palette("Darjeeling2"))
+
+ggplot(stepsday3, aes(steps, fill = dataset)) + geom_histogram(alpha =0.7, aes(x = ..steps per day..), position = 'identity')+ scale_fill_brewer(palette = "Set1")
+
+
+
+hist(stepsday2$steps, breaks=40,
+      main="Histogram of total steps per day of the filled in dataset act2",
+      xlab="steps per day", col=rgb(0, 1, 0, 0.5))
+hist(stepsday$steps, breaks=20,
+      main="Histogram of total steps per day of the filled in dataset act2",
+      xlab="steps per day",add = T, col="skyblue")
+      
+      
+```{r}
+# Make a histogram of the total number of steps taken each day
+hist(stepsday2$steps, breaks=20,
+     main="Histogram of total steps per day of the filled in dataset act2",
+     xlab="steps per day", col=rgb(0, 1, 0, 0.5))
+hist(stepsday$steps, breaks=20,
+     main="Histogram of total steps per day of the filled in dataset act2",
+     xlab="steps per day",add = T, col="skyblue")
+```
