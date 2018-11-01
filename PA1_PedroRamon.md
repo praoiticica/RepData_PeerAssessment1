@@ -1,4 +1,32 @@
 ---
+jupyter:
+  jupytext:
+    text_representation:
+      extension: .md
+      format_name: markdown
+      format_version: '1.0'
+      jupytext_version: 0.8.4
+  kernelspec:
+    display_name: Python 3
+    language: python
+    name: python3
+  language_info:
+    codemirror_mode:
+      name: ipython
+      version: 3
+    file_extension: .py
+    mimetype: text/x-python
+    name: python
+    nbconvert_exporter: python
+    pygments_lexer: ipython3
+    version: 3.7.0
+---
+
+```python
+%load_ext rpy2.ipython
+```
+
+---
 title: "Reproducible Research: Peer Assessment 1"
 author: "Pedro Ramon Almeida Oiticica"
 date: "30 de outubro de 2018"
@@ -25,7 +53,7 @@ jupyter:
     version: 3.4.3
 ---
 
-```{r setup, include=FALSE}
+```python
 knitr::opts_chunk$set(echo = TRUE, message = FALSE,warning = FALSE)
 ```
 
@@ -57,10 +85,10 @@ If you already forked and cloned the directoty from my github repository, the ra
 
 
 **1. This code will unzip and load the data from the local zip file into RStudio.**
-```{r}
+
+```R
 activity<-read.csv(unz("activity.zip", "activity.csv"),stringsAsFactors = FALSE)
 ```
-
 
 **2. Process/transform the data into a suitable format.**
 
@@ -71,13 +99,14 @@ In the introduction we give informations about the raw dataset. The variables in
 - interval: Identifier for the 5-minute in which measure was taken (int: HHMM:{0,5,10,15,...55,100,105,...,155,200,205,...,2355}).
 
 We can see a summary of the raw dataset using the code
-```{r}
+
+```R
 str(activity)
 ```
 
 we use the following code to process the raw data into a more suitable format.
 
-```{r}
+```R
 # Convert the column date from a string type (chr) to a date format object.
 # Parse the interval values into a 4-digit HHMM, and into a date-time format (type "Period") using the functions FormatC(), sub() and the lubridate package. Its necessary to convert the class "period" (PISIXlt) into a POSIXct format using as_datetime() function because dplyr package do not work propelly with the class "Period" format in the filter, arrange,... functions.
 library(dplyr)
@@ -86,7 +115,8 @@ act<-activity%>%mutate(date=as.Date(date))%>%mutate(time=formatC(interval,width=
 ```
 
 Let's take a look in out processed data set act.
-```{r}
+
+```R
 head(act)
 str(act)
 ```
@@ -100,19 +130,21 @@ _______________________________________________________________________
 2. Make a histogram of the total number of steps taken each day (If you do not understand the difference between a histogram and a barplot, research the difference between them).
 3. Calculate and report the mean and median of the total number of steps taken per day
 
-```{r}
+```R
 stepsday<-act%>%group_by(date)%>%summarize(steps=sum(steps))
 ```
 
-Plot a histogram. 
-```{r}
+Plot a histogram.
+
+```R
 hist(stepsday$steps, breaks=20,
      main="Histogram of total steps per day",
      xlab="steps per day", col="blue")
 ```
 
 Calculate the mean and median
-```{r}
+
+```R
 meansteps = mean(stepsday$steps,na.rm=TRUE)
 mediansteps = median(stepsday$steps,na.rm=TRUE)
 ```
@@ -129,7 +161,7 @@ ________________________________________________________________________________
 
 The average daily activity pattern shows the mean value of steps counted for each time interval along the measured days. It can give information of what are the moste active time of the day and the lowest active time of the day on average. To plot this pattern we use the following code.
 
-```{r}
+```R
 library(ggplot2)
 library(scales)
 library(stringr)
@@ -175,7 +207,8 @@ Here we perform some exploratory analysis and propose a method to overcome the a
 5. Compare the new exploratoy analyse results obtained and the histogram obtained with that obtainet in the first part of this assignment. We also discuss the impact of imputing data on the estimates of the total daily number of steps.
 
 Let's check the missing values NAs in our data set.
-```{r}
+
+```R
 summarize_all(act,funs(sum(is.na(.))))
 ```
 
@@ -183,7 +216,8 @@ We can devise a strategy for filling in all of the missing values in the dataset
 
 
 Let's beguin by list the dates for whitch steps are NAs.
-```{r}
+
+```R
 nadates<-act%>%filter(is.na(steps))%>%mutate(weekday=weekdays(date))%>%select(date,weekday)%>%unique()%>%print()
 
 ```
@@ -192,7 +226,7 @@ The above table shows the dates and the corresponding weekdays for which the ste
 
 We use the folowing code to fill in the missing values in the column steps of our dataset.
 
-```{r}
+```R
 # Divide the data set in two parts with and without NAs values.
 notNAact<-act%>%filter(!is.na(steps))
 
@@ -214,8 +248,7 @@ act2<-arrange(rbind(filledact,notNAact),date,time)
 
 we created a new dataset called act2 using our method of filling in missing values on the variable steps. This dataset is equal to the original but with the missing data filled in. To check if our method is reasonable let's plot a histogram of the total steps taken per day on the filled in dataset and compare the result with the histogram obtained with the original data.
 
-
-```{r}
+```R
 require(dplyr)
 require(ggplot2)
 
@@ -232,13 +265,13 @@ ggplot(stepsday3, aes(steps, fill = dataset)) + geom_histogram(alpha =0.7, aes(y
 
 ```
 
-
 We calculate and report the mean and median of the total number of steps taken per day.
 
-```{r}
+```R
 meansteps2 = mean(stepsday2$steps,na.rm=TRUE)
 mediansteps2 = median(stepsday2$steps,na.rm=TRUE)
 ```
+
 The *mean* and *median* total number of steps taken per day are compared here: 
 
 For the original dataser we have **mean** = **`r meansteps`**, and **median** = **`r mediansteps`**.
@@ -255,20 +288,17 @@ With these results, we can conclude that our method for filling the absent value
 and "weekend" indicating whether a given date is a weekday or weekend
 day.
 
-```{r}
+```R
 act<-act%>%mutate(day=weekdays(date))%>%mutate(type=ifelse(day=="s?bado" | day=="domingo","weekend","weekday"))
 
 act2<-act2%>%mutate(day=weekdays(date))%>%mutate(type=ifelse(day=="s?bado" | day=="domingo","weekend","weekday"))
 ```
 
-
-
 2. Make a panel plot containing a time series plot (i.e. type = "l") of the
 5-minute interval (x-axis) and the average number of steps taken, averaged
-across all weekday days or weekend days (y-axis). 
+across all weekday days or weekend days (y-axis).
 
-
-```{r}
+```R
 #Obtain the activity pattern by the average of the number of steps for each
 #time-interval for the two datasets and for the two types of days, weekdays
 #and weekends.
@@ -303,4 +333,6 @@ plot(myplot)
 
 The diffference beteew the original and filled data set is barely perceptible. Alltough there are a significant difference pattern on the steps for weekday ans weekends. The differences can be explained by the activities that are, on avarege different. During the weekdays the person wake up earlyer and do not walk so much in the afternoon, maybe his/her job is on an office. O weekends the person wake up later and walks more at afternoon, maybe he/she enjoy the weekend with sport activies.
 
+```python
 
+```

@@ -5,24 +5,6 @@ date: "30 de outubro de 2018"
 output: 
 html_document:
 keep_md: true
-jupyter:
-  jupytext:
-    text_representation:
-      extension: .Rmd
-      format_name: rmarkdown
-      format_version: '1.0'
-      jupytext_version: 0.8.4
-  kernelspec:
-    display_name: R
-    language: R
-    name: ir
-  language_info:
-    codemirror_mode: r
-    file_extension: .r
-    mimetype: text/x-r-source
-    name: R
-    pygments_lexer: r
-    version: 3.4.3
 ---
 
 ```{r setup, include=FALSE}
@@ -157,7 +139,7 @@ ggplot(data=actpattern,aes(x=time,y=meansteps))+geom_line()+
         geom_text(aes(x=MostActiveTime,y=MaxAvgSteps),
                   label=str_c("Time = ", format(MostActiveTime,"%H:%M")),
                   colour="blue",angle=0,vjust = 2.5,hjust=-0.2)
-```
+``` 
 
 The maximum number of steps averaged across all the days in the dataset is centered at the time `r format(MostActiveTime,"%H:%M")`. The maximum of the activity occurs between 8:00 ans 9:00 hours.
 
@@ -247,8 +229,8 @@ For the filled in dataset we have **mean2** = **`r meansteps2`**, and **median2*
 
 With these results, we can conclude that our method for filling the absent values in the column steps is reasonable, because the change in the statistical distribution is not significant. The frequency of the mean value increases because we atrubuted for the missing value days the average value os steps.
 
-
-
+ 
+ 
 ## Are there differences in activity patterns between weekdays and weekends?
 
 1. Create a new factor variable in the dataset with two levels - "weekday"
